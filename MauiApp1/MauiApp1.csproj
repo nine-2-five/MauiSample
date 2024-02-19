@@ -1,0 +1,134 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+    <PropertyGroup>
+		<TargetFrameworks>net8.0-android</TargetFrameworks>
+        <!--<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>-->
+        <!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
+        <!-- <TargetFrameworks>$(TargetFrameworks);net8.0-tizen</TargetFrameworks> -->
+
+        <!-- Note for MacCatalyst:
+            The default runtime is maccatalyst-x64, except in Release config, in which case the default is maccatalyst-x64;maccatalyst-arm64.
+            When specifying both architectures, use the plural <RuntimeIdentifiers> instead of the singular <RuntimeIdentifier>.
+            The Mac App Store will NOT accept apps with ONLY maccatalyst-arm64 indicated;
+            either BOTH runtimes must be indicated or ONLY macatalyst-x64. -->
+        <!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
+
+        <OutputType>Exe</OutputType>
+        <RootNamespace>MauiApp1</RootNamespace>
+        <UseMaui>true</UseMaui>
+        <SingleProject>true</SingleProject>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <EnableDefaultCssItems>false</EnableDefaultCssItems>
+        <Nullable>enable</Nullable>
+
+        <!-- Display name -->
+        <ApplicationTitle>MauiApp1</ApplicationTitle>
+
+        <!-- App Identifier -->
+        <ApplicationId>com.companyname.mauiapp1</ApplicationId>
+
+        <!-- Versions -->
+        <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+        <ApplicationVersion>1</ApplicationVersion>
+
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">24.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+        <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+        <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- App Icon -->
+        <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+
+        <!-- Splash Screen -->
+        <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+
+        <!-- Images -->
+        <MauiImage Include="Resources\Images\*" />
+        <MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
+
+        <!-- Custom Fonts -->
+        <MauiFont Include="Resources\Fonts\*" />
+
+        <!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
+        <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+    </ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0-android'">
+		<PackageReference Include="Xamarin.AndroidX.Core" Version="1.12.0.3" />
+		<PackageReference Include="Xamarin.AndroidX.Collection" Version="1.4.0" />
+		<PackageReference Include="Xamarin.AndroidX.Collection.Ktx" Version="1.4.0" />
+		<PackageReference Include="Xamarin.AndroidX.Activity.Ktx" Version="1.8.2" />
+		<GoogleServicesJson Include="google-services.json" />
+		<PackageReference Include="Xamarin.Google.Android.Material">
+			<Version>1.10.0.2</Version>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0-ios'">
+		<PackageReference Include="Xamarin.Firebase.iOS.Core" Version="8.10.0.3" />
+		<BundleResource Include="GoogleService-Info.plist" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+		<PackageReference Include="Microsoft.AppCenter.Analytics" Version="5.0.3" />
+		<PackageReference Include="Microsoft.AppCenter.Crashes" Version="5.0.3" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.7" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.7" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+		<PackageReference Include="Plugin.Firebase.Analytics" Version="2.0.2" />
+		<PackageReference Include="Plugin.Firebase.CloudMessaging" Version="2.0.4" />
+		<PackageReference Include="Xamarin.Build.Download" Version="0.11.4" />
+	</ItemGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
+		<ApplicationDisplayVersion>0.0.1</ApplicationDisplayVersion>
+		<AndroidPackageFormat>aab</AndroidPackageFormat>
+		<AndroidUseAapt2>True</AndroidUseAapt2>
+		<AndroidEnableProfiledAot>True</AndroidEnableProfiledAot>
+		<AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
+		<EnableLLVM>False</EnableLLVM>
+		<AndroidKeyStore>False</AndroidKeyStore>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-ios|AnyCPU'">
+		<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
+		<ApplicationDisplayVersion>0.0.1</ApplicationDisplayVersion>
+		<CodesignEntitlements>Platforms\iOS\Entitlements.plist</CodesignEntitlements>
+		<MtouchLink>None</MtouchLink>
+		<MtouchDebug>True</MtouchDebug>
+		<EmbedOnDemandResources>True</EmbedOnDemandResources>
+		<MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
+		<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
+		<ApplicationDisplayVersion>0.0.1</ApplicationDisplayVersion>
+		<MtouchDebug>False</MtouchDebug>
+		<BuildIpa>True</BuildIpa>
+		<MtouchLink>SdkOnly</MtouchLink>
+		<MtouchUseLlvm>True</MtouchUseLlvm>
+		<EmbedOnDemandResources>True</EmbedOnDemandResources>
+		<MtouchNoSymbolStrip>True</MtouchNoSymbolStrip>
+	</PropertyGroup>
+
+    <ItemGroup>
+      <Compile Update="Platforms\Android\MainActivity.cs">
+        <ExcludeFromCurrentConfiguration>false</ExcludeFromCurrentConfiguration>
+      </Compile>
+      <Compile Update="Platforms\Android\MainApplication.cs">
+        <ExcludeFromCurrentConfiguration>false</ExcludeFromCurrentConfiguration>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="Microsoft.AspNetCore.Components.WebView.Maui" Version="8.0.7" />
+    </ItemGroup>
+
+</Project>
